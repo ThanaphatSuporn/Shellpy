@@ -27,13 +27,13 @@ def date():
     formatted = t.strftime("%Y-%m-%d %H:%M:%S", local_time)
     print(formatted)
 
-def tree(folder=".", prefix=""):
+def tree(folder="", prefix=""):
     if not os.path.exists(folder):
         print(f"Folder '{folder}' not found.")
         return
 
     try:
-        files = os.listdir(folder)
+        files = os.listdir(folder if folder == "" else os.getcwd())
         for i, f in enumerate(files):
             path = os.path.join(folder, f)
             connector = "└── " if i == len(files) - 1 else "├── "
