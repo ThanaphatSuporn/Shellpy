@@ -14,7 +14,19 @@ filetypes = {
     ".luau": "Luau File",
     ".ini": "initialization File",
     ".txt": "Text File Document",
+    ".Ink": "Windows Shortcut File",
 }
+
+def help():
+    print("""
+-------> Help <-------
+    exit/quit -> Quit shell
+    cd [filepath/..] -> go to that path/return to previous path
+    pwd -> show current path [deprecated]
+    clear -> clear output
+    ls ->  check all file/dir in directory
+    del [filename/path] -> delete file or directory
+""")
 
 def commands(cmds):
     cmds = cmds.strip()
@@ -26,6 +38,8 @@ def commands(cmds):
         print("Exiting shell...")
         exit(0)
 
+    elif cmds == "help":
+        help()
     # change directory
     elif cmds.startswith("cd "):
         target = cmds[3:].strip()
@@ -70,8 +84,6 @@ def commands(cmds):
             print(f"del: {notexisted}")
         except Exception as e:
             print(f"del: {e}")
-    elif cmds == "cls":
-        os.system("cls")
     else:
         print(f"{Fore.RED}Unknown command: {cmds}")
 
