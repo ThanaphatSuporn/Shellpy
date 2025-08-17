@@ -32,16 +32,19 @@ def tree(folder=".", prefix=""):
         print(f"Folder '{folder}' not found.")
         return
 
-    files = os.listdir(folder)
-    for i, f in enumerate(files):
-        path = os.path.join(folder, f)
-        # decide which branch character to use
-        connector = "└── " if i == len(files) - 1 else "├── "
-        print(prefix + connector + f)
-        # if it's a directory, recurse
-        if os.path.isdir(path):
-            extension = "    " if i == len(files) - 1 else "│   "
-            tree(path, prefix + extension)
+    try:
+        files = os.listdir(folder)
+        for i, f in enumerate(files):
+            path = os.path.join(folder, f)
+            connector = "└── " if i == len(files) - 1 else "├── "
+            print(prefix + connector + f)
+
+            if os.path.isdir(path):
+                extension = "    " if i == len(files) - 1 else "│   "
+                tree(path, prefix + extension)
+    except PermissionError:
+        print(prefix + "[Permission Denied]")
+        
 
 
 def help():
@@ -53,6 +56,7 @@ def help():
     clear -> clear output
     ls ->  check all file/dir in directory
     del [filename/path] -> delete file or directory
+    tree [blank/path] -> tree in directory if access denied it will give error
 """)
 
 def commands(cmds):
