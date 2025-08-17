@@ -37,6 +37,7 @@ def help():
     clear -> clear output
     ls ->  check all file/dir in directory
     del [filename/path] -> delete file or directory
+    date -> get current data and time
 """)
 
 def commands(cmds):
@@ -128,3 +129,4 @@ def shell():
 
 if __name__ == "__main__":
     shell()
+
