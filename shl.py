@@ -3,6 +3,9 @@ import colorama
 import random
 import requests
 import getpass
+import subprocess
+import sys
+import time as t
 from colorama import Fore, Style, init
 
 init(autoreset=True)
@@ -16,6 +19,14 @@ filetypes = {
     ".txt": "Text File Document",
     ".Ink": "Windows Shortcut File",
 }
+
+def date():
+    # get current local time
+    local_time = t.localtime()
+    # format it nicely
+    formatted = t.strftime("%Y-%m-%d %H:%M:%S", local_time)
+    print(formatted)
+
 
 def help():
     print("""
@@ -40,6 +51,8 @@ def commands(cmds):
 
     elif cmds == "help":
         help()
+    elif cmds == "date":
+        date()
     # change directory
     elif cmds.startswith("cd "):
         target = cmds[3:].strip()
