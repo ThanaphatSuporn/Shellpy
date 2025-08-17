@@ -1,0 +1,105 @@
+import os
+import colorama
+import random
+import requests
+import getpass
+from colorama import Fore, Style, init
+
+init(autoreset=True)
+
+# map extensions to filetypes
+filetypes = {
+    ".py": "Python File",
+    ".lua": "Lua File",
+    ".luau": "Luau File",
+    ".ini": "initialization File",
+    ".txt": "Text File Document",
+}
+
+def commands(cmds):
+    cmds = cmds.strip()
+    if not cmds:
+        return
+
+    # exit shell
+    if cmds in ["exit", "quit"]:
+        print("Exiting shell...")
+        exit(0)
+
+    # change directory
+    elif cmds.startswith("cd "):
+        target = cmds[3:].strip()
+        try:
+            os.chdir(os.path.expanduser(target))
+        except Exception as e:
+            print(f"cd: {e}")
+
+    # print working directory
+    elif cmds == "pwd":
+        print(os.getcwd())
+
+    # clear screen
+    elif cmds == "clear":
+        os.system("cls" if os.name == "nt" else "clear")
+
+    # list directory contents
+    elif cmds == "ls":
+        lists = os.listdir()
+        path = os.getcwd()
+        files = 0
+        folders = 0
+        print(f"--->[{path}]<---")
+        for i in lists:
+            if os.path.isdir(i):
+                print(f"{Fore.BLUE}{i}{Style.RESET_ALL} [Directory]")
+                folders += 1
+            elif os.path.isfile(i):
+                ext = os.path.splitext(i)[1].lower()
+                if ext in filetypes:
+                    print(f"{Fore.GREEN}{i}{Style.RESET_ALL} [File - {filetypes[ext]}]")
+                else:
+                    print(f"{i} [File]")
+                files += 1
+        print("-------")
+        print(f"{files} Found files | {folders} Found directory")
+    elif cmds.startswith("del "):
+        target = cmds[4:].strip()
+        try:
+            os.remove(os.path.expanduser(target))
+        except FileExistsError as notexisted:
+            print(f"del: {notexisted}")
+        except Exception as e:
+            print(f"del: {e}")
+    elif cmds == "cls":
+        os.system("cls")
+    else:
+        print(f"{Fore.RED}Unknown command: {cmds}")
+
+def shell():
+    user = getpass.getuser()
+    # check if admin/root
+    if os.name == "nt":
+        try:
+            import ctypes
+            is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+        except:
+            is_admin = False
+    else:
+        is_admin = (os.geteuid() == 0)
+
+    role = "admin" if is_admin else "user"
+
+    while True:
+        try:
+            path = os.getcwd()
+            print(f"{Fore.LIGHTMAGENTA_EX}[{user}@{role}]&[{path}]")
+            cmd = input(f"{Fore.LIGHTGREEN_EX}$ ")
+            commands(cmd)
+        except KeyboardInterrupt:
+            print("\nUse 'exit' to quit.")
+        except EOFError:
+            print("\nExiting shell.")
+            break
+
+if __name__ == "__main__":
+    shell()
