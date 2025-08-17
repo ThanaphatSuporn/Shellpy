@@ -27,6 +27,22 @@ def date():
     formatted = t.strftime("%Y-%m-%d %H:%M:%S", local_time)
     print(formatted)
 
+def tree(folder=".", prefix=""):
+    if not os.path.exists(folder):
+        print(f"Folder '{folder}' not found.")
+        return
+
+    files = os.listdir(folder)
+    for i, f in enumerate(files):
+        path = os.path.join(folder, f)
+        # decide which branch character to use
+        connector = "└── " if i == len(files) - 1 else "├── "
+        print(prefix + connector + f)
+        # if it's a directory, recurse
+        if os.path.isdir(path):
+            extension = "    " if i == len(files) - 1 else "│   "
+            tree(path, prefix + extension)
+
 
 def help():
     print("""
@@ -37,7 +53,6 @@ def help():
     clear -> clear output
     ls ->  check all file/dir in directory
     del [filename/path] -> delete file or directory
-    date -> get current data and time
 """)
 
 def commands(cmds):
@@ -65,11 +80,13 @@ def commands(cmds):
     # print working directory
     elif cmds == "pwd":
         print(os.getcwd())
-
+    elif cmds.startswith("tree "):
+        tree(cmds[5:])
+    elif cmds == "tree":
+        tree()
     # clear screen
     elif cmds == "clear":
         os.system("cls" if os.name == "nt" else "clear")
-
     # list directory contents
     elif cmds == "ls":
         lists = os.listdir()
@@ -129,4 +146,3 @@ def shell():
 
 if __name__ == "__main__":
     shell()
-
