@@ -21,9 +21,7 @@ filetypes = {
 }
 
 def date():
-    # get current local time
     local_time = t.localtime()
-    # format it nicely
     formatted = t.strftime("%Y-%m-%d %H:%M:%S", local_time)
     print(formatted)
 
@@ -31,21 +29,35 @@ def tree(folder="", prefix=""):
     if not os.path.exists(folder):
         print(f"Folder '{folder}' not found.")
         return
-
     try:
         files = os.listdir(folder if folder == "" else os.getcwd())
         for i, f in enumerate(files):
             path = os.path.join(folder, f)
             connector = "└── " if i == len(files) - 1 else "├── "
             print(prefix + connector + f)
-
             if os.path.isdir(path):
                 extension = "    " if i == len(files) - 1 else "│   "
                 tree(path, prefix + extension)
     except PermissionError:
         print(prefix + "[Permission Denied]")
-        
 
+def checkupdate():
+    VERSION_URL = "https://raw.githubusercontent.com/ThanaphatSuporn/Shellpy/main/version.txt"
+    LOCAL_VERSION_FILE = r"C:\Users\admin\OneDrive\เดสก์ท็อป\Folder_clean\Code\Pystarp\version.txt"
+    try:
+        remote_version = requests.get(VERSION_URL, timeout=5).text.strip()
+        if os.path.exists(LOCAL_VERSION_FILE):
+            with open(LOCAL_VERSION_FILE, "r") as f:
+                local_version = f.read().strip()
+        else:
+            local_version = "unknown"
+        if remote_version != local_version:
+            print(f"{Fore.YELLOW}Update available! Now running auto updater{Style.RESET_ALL}")
+            os.system(r"python 'C:\Users\admin\OneDrive\เดสก์ท็อป\Folder_clean\Code\Pystarp\autoupdater.py'")
+        else:
+            print(f"{Fore.GREEN}You are up to date. Version: {local_version}{Style.RESET_ALL}")
+    except Exception as e:
+        print(f"{Fore.RED}Update check failed: {e}{Style.RESET_ALL}")
 
 def help():
     print("""
@@ -57,41 +69,34 @@ def help():
     ls ->  check all file/dir in directory
     del [filename/path] -> delete file or directory
     tree [blank/path] -> tree in directory if access denied it will give error
+    lookforupdate -> Check update if it available it will run auto updater
 """)
 
 def commands(cmds):
     cmds = cmds.strip()
     if not cmds:
         return
-
-    # exit shell
     if cmds in ["exit", "quit"]:
         print("Exiting shell...")
         exit(0)
-
     elif cmds == "help":
         help()
     elif cmds == "date":
         date()
-    # change directory
     elif cmds.startswith("cd "):
         target = cmds[3:].strip()
         try:
             os.chdir(os.path.expanduser(target))
         except Exception as e:
             print(f"cd: {e}")
-
-    # print working directory
     elif cmds == "pwd":
         print(os.getcwd())
     elif cmds.startswith("tree "):
         tree(cmds[5:])
     elif cmds == "tree":
         tree()
-    # clear screen
     elif cmds == "clear":
         os.system("cls" if os.name == "nt" else "clear")
-    # list directory contents
     elif cmds == "ls":
         lists = os.listdir()
         path = os.getcwd()
@@ -119,12 +124,13 @@ def commands(cmds):
             print(f"del: {notexisted}")
         except Exception as e:
             print(f"del: {e}")
+    elif cmds == "lookforupdate":
+        checkupdate()
     else:
         print(f"{Fore.RED}Unknown command: {cmds}")
 
 def shell():
     user = getpass.getuser()
-    # check if admin/root
     if os.name == "nt":
         try:
             import ctypes
@@ -133,9 +139,7 @@ def shell():
             is_admin = False
     else:
         is_admin = (os.geteuid() == 0)
-
     role = "admin" if is_admin else "user"
-
     while True:
         try:
             path = os.getcwd()
