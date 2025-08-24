@@ -41,6 +41,16 @@ def tree(folder="", prefix=""):
     except PermissionError:
         print(prefix + "[Permission Denied]")
 
+def cat(filename):
+    if filename == None:
+        print("cat: no file")
+    
+    try:
+        with open(filename, "r", encoding="utf-8", errors="ignore") as f:
+            print(f.read())
+    except Exception as e:
+        print(f"cat: {e}")
+
 def touch(filename=None):
     try:
         if not filename:
@@ -70,6 +80,20 @@ def checkupdate():
     except Exception as e:
         print(f"{Fore.RED}Update check failed: {e}{Style.RESET_ALL}")
 
+def rename(args):
+    if len(args) != 2:
+        print("Usage: rename [old_filename] [new_filename]")
+    else:
+        old_name, new_name = args
+        try:
+            if not os.path.exists(old_name):
+                print(f"rename: '{old_name}' does not exist.")
+            else:
+                os.rename(old_name, new_name)
+                print(f"'{old_name}' renamed to '{new_name}'")
+        except Exception as e:
+            print(f"rename: {e}")
+
 def help():
     print("""
 -------> Help <-------
@@ -82,6 +106,8 @@ def help():
     tree [blank/path] -> tree in directory if access denied it will give error
     lookforupdate -> Check update if it available it will run auto updater
     touch [Filename/blank] ->  Create new files
+    cat [Filename] -> Read file content
+    rename [Filename Old] [Filename new] -> rename the file or directory
 """)
 
 def commands(cmds):
@@ -138,6 +164,11 @@ def commands(cmds):
             print(f"del: {e}")
     elif cmds == "lookforupdate":
         checkupdate()
+    elif cmds.startswith("cat "):
+        cat(cmds[4:].strip())
+    elif cmds.startwith("rename "):
+        args = cmds[7:].strip().split()
+        rename(args)
     else:
         print(f"{Fore.RED}Unknown command: {cmds}")
 
