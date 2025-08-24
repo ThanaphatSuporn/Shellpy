@@ -53,7 +53,7 @@ def checkupdate():
             local_version = "unknown"
         if remote_version != local_version:
             print(f"{Fore.YELLOW}Update available! Now running auto updater{Style.RESET_ALL}")
-            os.system(r"python 'C:\Users\admin\OneDrive\เดสก์ท็อป\Folder_clean\Code\Pystarp\autoupdater.py'")
+            os.system(r"python C:\Users\admin\OneDrive\เดสก์ท็อป\Folder_clean\Code\Pystarp\autoupdater.py")
         else:
             print(f"{Fore.GREEN}You are up to date. Version: {local_version}{Style.RESET_ALL}")
     except Exception as e:
@@ -154,3 +154,4 @@ def shell():
 
 if __name__ == "__main__":
     shell()
+
