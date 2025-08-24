@@ -1,2 +1,2 @@
 ---> V1.4.0 <---
--New update info
+-New commands : touch [filename/blank] -> Create new files!
