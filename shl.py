@@ -41,6 +41,17 @@ def tree(folder="", prefix=""):
     except PermissionError:
         print(prefix + "[Permission Denied]")
 
+def touch(filename=None):
+    try:
+        if not filename:
+            open("New document text", 'a').close()
+            print(f"File '{filename}' created.")
+        else:
+            open(filename, 'a').close()
+            print(f"File '{filename}' created.")
+    except Exception as e:
+        print(f"touch: {e}")
+
 def checkupdate():
     VERSION_URL = "https://raw.githubusercontent.com/ThanaphatSuporn/Shellpy/main/version.txt"
     LOCAL_VERSION_FILE = r"C:\Users\admin\OneDrive\เดสก์ท็อป\Folder_clean\Code\Pystarp\version.txt"
@@ -53,7 +64,7 @@ def checkupdate():
             local_version = "unknown"
         if remote_version != local_version:
             print(f"{Fore.YELLOW}Update available! Now running auto updater{Style.RESET_ALL}")
-            os.system(r"python C:\Users\admin\OneDrive\เดสก์ท็อป\Folder_clean\Code\Pystarp\autoupdater.py")
+            os.system(r"python 'C:\Users\admin\OneDrive\เดสก์ท็อป\Folder_clean\Code\Pystarp\autoupdater.py'")
         else:
             print(f"{Fore.GREEN}You are up to date. Version: {local_version}{Style.RESET_ALL}")
     except Exception as e:
@@ -70,6 +81,7 @@ def help():
     del [filename/path] -> delete file or directory
     tree [blank/path] -> tree in directory if access denied it will give error
     lookforupdate -> Check update if it available it will run auto updater
+    touch [Filename/blank] ->  Create new files
 """)
 
 def commands(cmds):
@@ -154,4 +166,3 @@ def shell():
 
 if __name__ == "__main__":
     shell()
-
