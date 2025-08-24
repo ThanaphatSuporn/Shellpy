@@ -1,2 +1,3 @@
 ---> Changelogs <---
--New commands : touch [filename/blank] -> Create new files!
+-New commands : cat [file] -> read file content
+rename [name_old_file] [name_new_file] -> rename file or directory
